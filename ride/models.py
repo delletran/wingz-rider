@@ -36,7 +36,8 @@ class Ride(models.Model):
     id_driver = models.ForeignKey(
         User,
         related_name='driver_rides',
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        blank=True, null=True
     )
     pickup_latitude = models.FloatField()
     pickup_longitude = models.FloatField()
@@ -68,6 +69,11 @@ class RideEvent(models.Model):
 
     def update_ride_status(self, _status: RIDE_STATUS.choices):
         with transaction.atomic():
+            if _status == RIDE_STATUS.PICKUP:
+                self.id_ride.pickup_time = timezone.now()
+            elif _status == RIDE_STATUS.DROPOFF:
+                self.id_ride.dropoff_time = timezone.now()
+
             self.id_ride.status = _status
             self.description = f"Status changed to {_status}."
 

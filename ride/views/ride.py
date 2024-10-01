@@ -14,14 +14,14 @@ from ..serializers.ride import (BaseRideSerializer, RideSerializer,
                                 RideUpsertSerializer)
 
 
-class RideCreateView(CreateAPIView):
+class RideCreateBookingView(CreateAPIView):
     serializer_class = RideUpsertSerializer
     queryset = Ride.objects.all()
     authentication_classes = [JWTAuthentication, ]
     permission_classes = [IsAuthenticated, IsAdminUser]
 
 
-class RideUpdateView(UpdateAPIView):
+class RideUpdateBookingView(UpdateAPIView):
     serializer_class = RideUpsertSerializer
     queryset = Ride.objects.all()
     authentication_classes = [JWTAuthentication, ]

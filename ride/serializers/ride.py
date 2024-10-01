@@ -1,8 +1,11 @@
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from user.serializers.user import BaseUserSerializer
 
 from ..models import Ride
+
+User = get_user_model()
 
 
 class BaseRideSerializer(serializers.ModelSerializer):
@@ -33,27 +36,53 @@ class RideSerializer(BaseRideSerializer):
 
 
 class RideUpsertSerializer(BaseRideSerializer):
+    id_driver = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(),
+        required=False,
+        allow_null=True,
+    )
 
     class Meta:
         model = Ride
         fields = [
+            'id_ride',
             'id_rider',
             'id_driver',
-        ] + BaseRideSerializer.Meta.fields
+            'status',
+            'pickup_latitude',
+            'pickup_longitude',
+            'dropoff_latitude',
+            'dropoff_longitude',
+        ]
 
     def validate(self, data):
         id_rider = data.get('id_rider')
         id_driver = data.get('id_driver')
-        pickup_time = data.get('pickup_time')
-        dropoff_time = data.get('dropoff_time')
 
         if id_rider == id_driver:
             raise serializers.ValidationError(
                 "Rider and Driver cannot be the same.")
 
-        if pickup_time and dropoff_time:
-            if pickup_time >= dropoff_time:
-                raise serializers.ValidationError(
-                    "Dropoff time must be after pickup time.")
-
         return data
+
+
+class RidePickUpSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Ride
+        fields = [
+            'id_ride',
+            'id_driver',
+        ]
+
+    # def validate(self, data):
+    #     id_ride = data.get('id_ride')
+    #     id_driver = data.get('id_driver')
+
+    #     id_ride = Ride.objects.get(pk=id_ride)
+
+    #     if id_ride.id_rider == id_driver:
+    #         raise serializers.ValidationError(
+    #             "Rider and Driver cannot be the same.")
+
+    #     return data

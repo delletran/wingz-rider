@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from ride.serializers.ride import BaseRideSerializer, RideUpsertSerializer
+from ride.serializers.ride import (RidePickUpSerializer, RideSerializer,
+                                   RideUpsertSerializer)
 
 from ..models import Ride, RideEvent
 
@@ -14,7 +15,7 @@ class BaseRideEventSerializer(serializers.ModelSerializer):
 
 
 class RideEventSerializer(BaseRideEventSerializer):
-    ride = BaseRideSerializer(source='id_ride')
+    ride = RideSerializer(source='id_ride')
 
     class Meta:
         model = RideEvent
@@ -22,7 +23,7 @@ class RideEventSerializer(BaseRideEventSerializer):
             'ride',
             'created_at',
             'description',
-        ]
+        ] + BaseRideEventSerializer.Meta.fields
 
 
 class RideEventUpsertSerializer(BaseRideEventSerializer):
@@ -55,3 +56,40 @@ class RideEventUpsertSerializer(BaseRideEventSerializer):
 
         instance = super().update(instance, validated_data)
         return instance
+
+
+class RideEventPickUpSerializer(serializers.ModelSerializer):
+    ride_data = RidePickUpSerializer(write_only=True)
+
+    class Meta:
+        model = RideEvent
+        fields = [
+            'id_ride',
+            'ride_data',
+        ]
+
+    def create(self, validated_data):
+        ride_instance: Ride = validated_data.get('id_ride', None)
+        ride_data = validated_data.pop('ride_data', None)
+        id_driver = ride_data.get('id_driver', None)
+
+        instance = super().create(validated_data)
+
+        if id_driver:
+            ride_instance.id_driver = id_driver
+            ride_instance.save()
+
+        return instance
+
+    def update(self, instance, validated_data):
+        ride_data = validated_data.pop('ride_data', None)
+
+        instance = super().update(instance, validated_data)
+        return instance
+
+
+class RideEventDropOffSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = RideEvent
+        fields = []

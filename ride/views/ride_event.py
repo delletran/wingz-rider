@@ -12,17 +12,51 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from core.permissions import IsAdminUser
 
 from ..filterset import RideEventFilter
-from ..models import RideEvent
+from ..models import RIDE_STATUS, RideEvent
 from ..serializers.ride_event import (BaseRideEventSerializer,
+                                      RideEventDropOffSerializer,
+                                      RideEventPickUpSerializer,
                                       RideEventSerializer,
                                       RideEventUpsertSerializer)
 
 
-class RideEventCreateView(CreateAPIView):
-    serializer_class = RideEventUpsertSerializer
+class RideEventPickUpView(CreateAPIView):
+    serializer_class = RideEventPickUpSerializer
     queryset = RideEvent.objects.all()
-    authentication_classes = [JWTAuthentication, ]
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def create(self, request, *args, **kwargs):
+        with transaction.atomic():
+            serializer = self.get_serializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            ride_event: RideEvent = serializer.save()
+
+            ride_event.update_ride_status(RIDE_STATUS.PICKUP)
+
+            return Response({
+                'message': ride_event.description,
+                'ride_event': RideEventSerializer(ride_event).data
+            }, status=status.HTTP_201_CREATED)
+
+
+class RideEventDropOffView(UpdateAPIView):
+    serializer_class = RideEventDropOffSerializer
+    queryset = RideEvent.objects.all()
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def update(self, request, *args, **kwargs):
+        with transaction.atomic():
+            response = super().update(request, *args, **kwargs)
+            ride_event: RideEvent = self.get_object()
+
+            ride_event.update_ride_status(RIDE_STATUS.DROPOFF)
+
+            return Response({
+                'message': ride_event.description,
+                'ride_event': RideEventSerializer(ride_event).data
+            }, status=status.HTTP_200_OK)
 
 
 class RideEventUpdateView(UpdateAPIView):
