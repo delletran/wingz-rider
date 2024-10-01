@@ -40,3 +40,20 @@ class RideUpsertSerializer(BaseRideSerializer):
             'id_rider',
             'id_driver',
         ] + BaseRideSerializer.Meta.fields
+
+    def validate(self, data):
+        id_rider = data.get('id_rider')
+        id_driver = data.get('id_driver')
+        pickup_time = data.get('pickup_time')
+        dropoff_time = data.get('dropoff_time')
+
+        if id_rider == id_driver:
+            raise serializers.ValidationError(
+                "Rider and Driver cannot be the same.")
+
+        if pickup_time and dropoff_time:
+            if pickup_time >= dropoff_time:
+                raise serializers.ValidationError(
+                    "Dropoff time must be after pickup time.")
+
+        return data
