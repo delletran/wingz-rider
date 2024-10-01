@@ -114,5 +114,5 @@
 
 ## API documentation
 
-    Go to swagger: http://127.0.0.1:8000/redoc/
+    Go to redoc: http://127.0.0.1:8000/redoc/
 
