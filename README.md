@@ -112,5 +112,7 @@
     make sure `id_rider`, `id_driver` users already exist.
 
 
+## API documentation
 
+    Go to swagger: http://127.0.0.1:8000/redoc/
 
