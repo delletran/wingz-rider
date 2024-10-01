@@ -89,27 +89,46 @@
     `Bearer your_access_token_here`
     
 
-3. **Creating RideEvents**:
-    Go to `ride_event`, `/api/ride_event/create`
+3. **Booking Ride**:
+    Go to `ride`, `/api/ride/create`
 
     sample data:
     ```json
     {
         "ride_data": {
             "id_rider": 2,
-            "id_driver": 3,
-            "status": "pickup",
+            "id_driver": null,
+            "status": "en-route",
             "pickup_latitude": 40.7128,
             "pickup_longitude": -74.0060,
             "dropoff_latitude": 40.730610,
             "dropoff_longitude": -73.935242,
-            "pickup_time": "2024-09-30T14:20:00Z",
-            "dropoff_time": null
         }
     }
     ```
 
-    make sure `id_rider`, `id_driver` users already exist.
+    make sure `id_rider` users already exist.
+
+    
+4. **Pickup a Booking/Ride | Creating RideEvent**:
+    Go to `ride_event`, `/api/ride_event/pickup`
+
+    sample data:
+    ```json
+    {
+        "id_ride": 1,
+        "ride_data": {
+            "id_driver": 3
+        }
+    }
+    ```
+
+    make sure `id_driver` users already exist.
+
+4. **Dropoff a Booking/Ride | Update RideEvent**:
+    Go to `ride_event`, `/api/ride_event/dropoff`
+
+    `id_ride_event`: <picked_up-ride_event_id>,
 
 
 ## API documentation
