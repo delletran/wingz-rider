@@ -49,6 +49,7 @@ INSTALLED_APPS = [
 
     # apps
     'user',
+    'ride',
 
 ]
 
@@ -79,7 +80,9 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'USER_ID_FIELD': 'id_user',
-    'USER_ID_CLAIM': 'id_user'
+    'USER_ID_CLAIM': 'id_user',
+    'ACCESS_TOKEN_LIFETIME': timedelta(hours=15),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=15),
 }
 
 ROOT_URLCONF = 'core.urls'

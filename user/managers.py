@@ -11,6 +11,7 @@ class USER_ROLE(models.TextChoices):
 
 class UserManager(BaseUserManager):
     def create_user(self, email, password=None, **kwargs):
+        kwargs.setdefault('role', USER_ROLE.OTHER)
         if not email:
             raise ValueError('The Email field must be set')
         email = self.normalize_email(email)

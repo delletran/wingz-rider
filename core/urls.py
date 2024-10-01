@@ -34,6 +34,10 @@ urlpatterns = [
 
     path("api/user/", include('user.urls')),
 
+    # ride app
+    path("api/ride/", include('ride.urls.ride')),
+    path("api/ride_event/", include('ride.urls.ride_event')),
+
 ]
 
 
@@ -56,7 +60,7 @@ if settings.DEBUG:
             license=openapi.License(name="Rider Wingz License"),
         ),
         public=True,
-        permission_classes=(permissions.IsAdminUser,)
+        permission_classes=(permissions.AllowAny,)
     )
     urlpatterns += [
         path('admin/', admin.site.urls),
