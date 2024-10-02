@@ -32,7 +32,7 @@ class RideSerializer(BaseRideSerializer):
         fields = [
             'rider',
             'driver',
-        ]
+        ] + BaseRideSerializer.Meta.fields
 
 
 class RideUpsertSerializer(BaseRideSerializer):
@@ -75,14 +75,12 @@ class RidePickUpSerializer(serializers.ModelSerializer):
             'id_driver',
         ]
 
-    # def validate(self, data):
-    #     id_ride = data.get('id_ride')
-    #     id_driver = data.get('id_driver')
+    def validate(self, data):
+        id_ride: Ride = data.get('id_ride')
+        id_driver = data.get('id_driver')
 
-    #     id_ride = Ride.objects.get(pk=id_ride)
+        if id_ride and id_ride.id_rider == id_driver:
+            raise serializers.ValidationError(
+                "Rider and Driver cannot be the same.")
 
-    #     if id_ride.id_rider == id_driver:
-    #         raise serializers.ValidationError(
-    #             "Rider and Driver cannot be the same.")
-
-    #     return data
+        return data

@@ -1,3 +1,4 @@
+from django.db.models.manager import BaseManager
 from rest_framework import serializers
 
 from ride.serializers.ride import (RidePickUpSerializer, RideSerializer,
@@ -80,6 +81,24 @@ class RideEventPickUpSerializer(serializers.ModelSerializer):
             ride_instance.save()
 
         return instance
+
+    def validate(self, attrs):
+        ride_instance: Ride = attrs.get('id_ride', None)
+        ride_events: BaseManager[RideEvent] = ride_instance.ride_events.all()
+
+        id_ride: Ride = attrs.get('id_ride')
+        ride_data = attrs.get('ride_data')
+        id_driver = ride_data.get('id_driver')
+
+        if ride_events:
+            raise serializers.ValidationError(
+                "Booking/Ride has already been pickup by another driver.")
+
+        if id_ride and id_ride.id_rider == id_driver:
+            raise serializers.ValidationError(
+                "Rider and Driver cannot be the same.")
+
+        return super().validate(attrs)
 
     def update(self, instance, validated_data):
         ride_data = validated_data.pop('ride_data', None)
