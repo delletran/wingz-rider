@@ -1,0 +1,63 @@
+{
+    "root": [
+        ".gitignore",
+        "LICENSE",
+        "manage.py",
+        "README.md",
+        "requirements.txt"
+    ],
+    "base": [
+        "models.py",
+        "tests.py",
+        "views.py"
+    ],
+    "base.constants": [
+        "api_info.json"
+    ],
+    "base.custom": [
+        "pagination.py"
+    ],
+    "base.docs": [
+        "ERD.drawio"
+    ],
+    "base.utils": [
+        "read_write_file.py"
+    ],
+    "core": [
+        "asgi.py",
+        "permissions.py",
+        "settings.py",
+        "urls.py",
+        "wsgi.py"
+    ],
+    "ride": [
+        "filterset.py",
+        "models.py",
+        "tests.py"
+    ],
+    "ride.serializers": [
+        "ride.py",
+        "ride_event.py"
+    ],
+    "ride.urls": [
+        "ride.py",
+        "ride_event.py"
+    ],
+    "ride.views": [
+        "ride.py",
+        "ride_event.py"
+    ],
+    "user": [
+        "managers.py",
+        "mixins.py",
+        "models.py",
+        "tests.py",
+        "urls.py",
+        "views.py"
+    ],
+    "user.helpers": [],
+    "user.serializers": [
+        "token.py",
+        "user.py"
+    ]
+}
