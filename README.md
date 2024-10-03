@@ -95,15 +95,13 @@
     sample data:
     ```json
     {
-        "ride_data": {
-            "id_rider": 2,
-            "id_driver": null,
-            "status": "en-route",
-            "pickup_latitude": 40.7128,
-            "pickup_longitude": -74.0060,
-            "dropoff_latitude": 40.730610,
-            "dropoff_longitude": -73.935242,
-        }
+        "id_rider": 2,
+        "id_driver": null,
+        "status": "en-route",
+        "pickup_latitude": 40.7128,
+        "pickup_longitude": -74.0060,
+        "dropoff_latitude": 40.730610,
+        "dropoff_longitude": -73.935242
     }
     ```
 
